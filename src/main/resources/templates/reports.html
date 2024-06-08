@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reports</title>
+</head>
+<body>
+<h1>Farm Report by Seasons</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Season</th>
+        <th>Farm Name</th>
+        <th>Crop Type</th>
+        <th>Expected Product</th>
+        <th>Actual Product</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="report : ${reports}">
+        <td th:text="${report.season}">Season</td>
+        <td th:text="${report.farmName}">Farm Name</td>
+        <td th:text="${report.cropType}">Crop Type</td>
+        <td th:text="${report.expectedProduct}">Expected Product</td>
+        <td th:text="${report.actualProduct}">Actual Product</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
