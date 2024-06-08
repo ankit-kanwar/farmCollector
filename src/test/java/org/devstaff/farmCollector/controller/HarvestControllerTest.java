@@ -15,12 +15,16 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(HarvestController.class)
@@ -31,6 +35,21 @@ class HarvestControllerTest {
 
     @MockBean
     private HarvestServiceImpl mockHarvestService;
+
+    @Test
+    void testSaveHarvest() throws Exception {
+        Harvest savedHarvest = new Harvest();
+        savedHarvest.setId(1L);
+        savedHarvest.setActualProduct(200.0);
+        when(mockHarvestService.saveHarvest(any(HarvestDTO.class))).thenReturn(savedHarvest);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/harvest")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"farmId\":1,\"cropId\":1,\"seasonId\":1,\"actualProduct\":\"200.0\"}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.actualProduct").value("200.0"));
+    }
 
     @Test
     void testGetAllHarvests() throws Exception {
